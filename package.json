@@ -1,0 +1,29 @@
+{
+  "name": "angular2-froala-wysiwyg-ext",
+  "version": "0.0.1",
+  "description": "FroalaEditor for angular2 applications.",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "author": {
+    "name": "Zoltán Balog",
+    "email": "zoltan.balog@appo.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zoltanbalog/angular2-froala-wysiwyg-ext.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zoltanbalog/angular2-froala-wysiwyg-ext/issues"
+  },
+  "dependencies": {
+    "angular2-froala-wysiwyg": "^2.5.0-1",
+    "ts-md5": "^1.2.0"
+  },
+  "tags": [
+    "angular2",
+    "froala",
+    "wysiwyg",
+    "wysiwyg-editor",
+    "html-editor"
+  ]
+}

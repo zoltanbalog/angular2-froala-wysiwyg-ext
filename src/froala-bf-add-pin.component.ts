@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'froala-bf-add-pin',
     templateUrl: './themes/default/froala-bf-add-pin.component.html',
-    styleUrls: './themes/default/froala-bf-add-pin.component.css'
+    styleUrls: ['./themes/default/froala-bf-add-pin.component.css']
 })
 export class FroalaBfAddPinComponent {
 

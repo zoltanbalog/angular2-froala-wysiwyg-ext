@@ -33,6 +33,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     @Input() thumbImageUrlSuffix;
 
     @Output() startAddPictureEvent = new EventEmitter<any>();
+    @Output() startAddPinEvent = new EventEmitter<any>();
     @Output() featuredImageChangedEvent = new EventEmitter<any>();
     @Output() contentValidationChangedEvent = new EventEmitter<any>();
 
@@ -224,6 +225,18 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
                     $btn.css('background', 'initial');
                 }
             },
+        });
+
+        this.froalaEditorBf.DefineIcon('addPinToImage', {NAME: 'map-pin'});
+        this.froalaEditorBf.RegisterCommand('addPinToImage', {
+            title: 'Add pin to image',
+            focus: false,
+            undo: false,
+            refreshAfterCallback: false,
+            callback: function () {
+                let $img = this.image.get();
+                self.startAddPinEvent.emit({'id': $img.attr('data-id'), 'src': $img.attr('src')});
+            }
         });
     }
 

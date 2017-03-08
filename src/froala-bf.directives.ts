@@ -29,6 +29,22 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         }
     }
 
+    @Input()
+    set addLoaderToImage(id) {
+        if (id && this.editedImage == id) {
+            this.startLoader();
+        }
+    }
+
+    @Input()
+    set finishEditedImageUpload(data) {
+        if (data && data.success) {
+            this.finishImageEdit(data);
+        } else if (data) {
+            this.failedImageEdit();
+        }
+    }
+
     @Input() thumbImageUrlPrefix;
     @Input() thumbImageUrlSuffix;
 
@@ -36,6 +52,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     @Output() startAddPinEvent = new EventEmitter<any>();
     @Output() featuredImageChangedEvent = new EventEmitter<any>();
     @Output() contentValidationChangedEvent = new EventEmitter<any>();
+    @Output() startEditImageEvent = new EventEmitter<any>();
 
     private froalaEditorBf: any;
     private froalaElementBf: any;
@@ -45,6 +62,8 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     private lastInsertedImgIndex = 0;
 
     private globalClickListener: any;
+
+    private editedImage;
 
     constructor(@Inject(ElementRef) elementRef: ElementRef) {
         super(elementRef);
@@ -238,6 +257,19 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
                 self.startAddPinEvent.emit({'id': $img.attr('data-id'), 'src': $img.attr('src')});
             }
         });
+
+        this.froalaEditorBf.DefineIcon('editImage', {NAME: 'edit'});
+        this.froalaEditorBf.RegisterCommand('editImage', {
+            title: 'Edit image',
+            focus: false,
+            undo: false,
+            refreshAfterCallback: false,
+            callback: function () {
+                let $img = this.image.get();
+                self.editedImage = $img.attr('data-id');
+                self.startEditImageEvent.emit({'id': $img.attr('data-id'), 'src': $img.attr('src')});
+            }
+        });
     }
 
     private setFroalaEventListeners() {
@@ -345,5 +377,34 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
     private contentValidationChanged(isMediaChanged = false) {
         this.contentValidationChangedEvent.emit({'mediaChanged': isMediaChanged});
+    }
+
+    private startLoader() {
+        let image = document.querySelector('img[data-id="'+ this.editedImage +'"]');
+        image.setAttribute('contenteditable', 'false');
+        image.insertAdjacentHTML('afterend', '<img class="image_preloader" contenteditable="false" src="assets/images/loading-bar.gif" />');
+    }
+
+    private finishLoader() {
+        let loader = document.querySelector('.image_preloader');
+        loader.remove();
+        this.editedImage = null;
+    }
+
+    private finishImageEdit(data) {
+        let $img = $('img[data-id="'+ this.editedImage +'"]');
+        $img.removeAttr('contenteditable');
+        if (this.featuredImage == this.editedImage) {
+            this.featuredImage = data.id;
+            this.feturedIdChanged();
+        }
+        this.froalaElementBf.froalaEditor('image.insert', data.src, true, {'id': data.id}, $img);
+        this.finishLoader();
+    }
+
+    private failedImageEdit() {
+        let $img = $('img[data-id="'+ this.editedImage +'"]');
+        $img.removeAttr('contenteditable');
+        this.finishLoader();
     }
 }

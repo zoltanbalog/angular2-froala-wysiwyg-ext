@@ -64,6 +64,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     private globalClickListener: any;
 
     private editedImage;
+    private isImageEdit: boolean = false;
 
     constructor(@Inject(ElementRef) elementRef: ElementRef) {
         super(elementRef);
@@ -265,9 +266,11 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             undo: false,
             refreshAfterCallback: false,
             callback: function () {
-                let $img = this.image.get();
-                self.editedImage = $img.attr('data-id');
-                self.startEditImageEvent.emit({'id': $img.attr('data-id'), 'src': $img.attr('src')});
+                if (!self.isImageEdit) {
+                    let $img = this.image.get();
+                    self.editedImage = $img.attr('data-id');
+                    self.startEditImageEvent.emit({'id': $img.attr('data-id'), 'src': $img.attr('src')});
+                }
             }
         });
     }
@@ -276,22 +279,25 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         let self = this;
 
         this.froalaElementBf.on('froalaEditor.image.inserted', function(e, editor, $img, response) {
-            $img.addClass('post-image');
-            if (self.featuredImage == 3) {
-                self.featuredImage = $img.attr('data-id');
-                $img.addClass('featured-image');
-                self.feturedIdChanged();
+            if (!self.isImageEdit) {
+                $img.addClass('post-image');
+                if (self.featuredImage == 3) {
+                    self.featuredImage = $img.attr('data-id');
+                    $img.addClass('featured-image');
+                    self.feturedIdChanged();
+                }
+                $img.addClass('fr-fi-ftp');
+                if (self.imagesWaitingToInsert[self.lastInsertedImgIndex+1]) {
+                    self.froalaElementBf.froalaEditor(
+                        'image.insert',
+                        self.imagesWaitingToInsert[self.lastInsertedImgIndex+1].src,
+                        true,
+                        {'id': self.imagesWaitingToInsert[self.lastInsertedImgIndex+1].id}
+                    );
+                    self.lastInsertedImgIndex = self.lastInsertedImgIndex + 1;
+                }
             }
-            $img.addClass('fr-fi-ftp');
-            if (self.imagesWaitingToInsert[self.lastInsertedImgIndex+1]) {
-                self.froalaElementBf.froalaEditor(
-                    'image.insert',
-                    self.imagesWaitingToInsert[self.lastInsertedImgIndex+1].src,
-                    true,
-                    {'id': self.imagesWaitingToInsert[self.lastInsertedImgIndex+1].id}
-                );
-                self.lastInsertedImgIndex = self.lastInsertedImgIndex + 1;
-            }
+            self.isImageEdit = false;
             self.contentValidationChanged(true);
         });
         this.froalaElementBf.on('froalaEditor.paste.afterCleanup', function(e, editor, clipboard_html) {
@@ -380,9 +386,12 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     }
 
     private startLoader() {
-        let image = document.querySelector('img[data-id="'+ this.editedImage +'"]');
-        image.setAttribute('contenteditable', 'false');
-        image.insertAdjacentHTML('afterend', '<img class="image_preloader" contenteditable="false" src="assets/images/loading-bar.gif" />');
+        this.isImageEdit = true;
+        let $img = $('img[data-id="'+ this.editedImage +'"]');
+        let offsetTop = $img.offset().top - $img.parent().offset().top - $img.parent().scrollTop() + ($img.height() / 2);
+        let offsetLeft = $img.offset().left - $img.parent().offset().left + ($img.width() / 2);
+
+        $img.after('<img class="image_preloader" style="top: ' + offsetTop + 'px; left: ' + offsetLeft + 'px;" contenteditable="false" src="assets/images/loading-bar.gif" />');
     }
 
     private finishLoader() {
@@ -403,6 +412,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     }
 
     private failedImageEdit() {
+        this.isImageEdit = false;
         let $img = $('img[data-id="'+ this.editedImage +'"]');
         $img.removeAttr('contenteditable');
         this.finishLoader();

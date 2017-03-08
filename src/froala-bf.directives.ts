@@ -129,7 +129,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
         this.froalaEditorBf.DefineIcon('preferPostImage', {NAME: 'bookmark'});
         this.froalaEditorBf.RegisterCommand('preferPostImage', {
-            title: 'Prefer',
+            title: 'Prefer image',
             focus: false,
             undo: false,
             refreshAfterCallback: true,

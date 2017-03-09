@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class FroalaBfAddPinComponent {
 
-    @Input() imageId: any;
+    @Input() imageUniqueId: any;
     @Input() imageSrc: any;
 
     constructor() {

@@ -30,8 +30,8 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     }
 
     @Input()
-    set addLoaderToImage(id) {
-        if (id && this.editedImage == id) {
+    set addLoaderToImage(uniqueId) {
+        if (uniqueId && this.editedImageUniqueId == uniqueId) {
             this.startLoader();
         }
     }
@@ -64,7 +64,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
     private globalClickListener: any;
 
-    private editedImage;
+    private editedImageUniqueId;
     private isImageEdit: boolean = false;
 
     constructor(@Inject(ElementRef) elementRef: ElementRef) {
@@ -256,7 +256,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             refreshAfterCallback: false,
             callback: function () {
                 let $img = this.image.get();
-                self.startAddPinEvent.emit({'id': $img.attr('data-unique-id'), 'src': $img.attr('src')});
+                self.startAddPinEvent.emit({'uniqueId': $img.attr('data-unique-id'), 'src': $img.attr('src')});
             }
         });
 
@@ -269,8 +269,8 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             callback: function () {
                 if (!self.isImageEdit) {
                     let $img = this.image.get();
-                    self.editedImage = $img.attr('data-unique-id');
-                    self.startEditImageEvent.emit({'id': $img.attr('data-unique-id'), 'src': $img.attr('src')});
+                    self.editedImageUniqueId = $img.attr('data-unique-id');
+                    self.startEditImageEvent.emit({'uniqueId': $img.attr('data-unique-id'), 'src': $img.attr('src')});
                 }
             }
         });
@@ -403,7 +403,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
     private startLoader() {
         this.isImageEdit = true;
-        let $img = $('img[data-unique-id="'+ this.editedImage +'"]');
+        let $img = $('img[data-unique-id="'+ this.editedImageUniqueId +'"]');
         $img.attr('contenteditable', 'false');
         let offsetTop = $img.offset().top - $img.parent().offset().top - $img.parent().scrollTop() + ($img.height() / 2);
         let offsetLeft = $img.offset().left - $img.parent().offset().left + ($img.width() / 2);
@@ -414,13 +414,13 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     private finishLoader() {
         let loader = document.querySelector('.image_preloader');
         loader.remove();
-        this.editedImage = null;
+        this.editedImageUniqueId = null;
     }
 
     private finishImageEdit(data) {
-        let $img = $('img[data-unique-id="'+ this.editedImage +'"]');
+        let $img = $('img[data-unique-id="'+ this.editedImageUniqueId +'"]');
         $img.removeAttr('contenteditable');
-        let ids = this.editedImage.split("-");
+        let ids = this.editedImageUniqueId.split("-");
         if (this.featuredImage == ids[0]) {
             this.featuredImage = data.id;
             this.feturedIdChanged();
@@ -431,7 +431,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
     private failedImageEdit() {
         this.isImageEdit = false;
-        let $img = $('img[data-unique-id="'+ this.editedImage +'"]');
+        let $img = $('img[data-unique-id="'+ this.editedImageUniqueId +'"]');
         $img.removeAttr('contenteditable');
         this.finishLoader();
     }

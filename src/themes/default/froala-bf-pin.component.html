@@ -1,0 +1,28 @@
+<li id="{{pin.uniqueId}}" class="cd-single-point" [class.is-open]="isOpened" [style.top]="pin.positionY + '%'" [style.left]="pin.positionX + '%'">
+    <i class="icn icn-add_pin"></i>
+    <a id="{{pin.uniqueId}}-CSPA" class="cd-img-replace" href="javascript:void(0);" data-disable-preview="true">Pin</a>
+    <div class="cd-more-info"
+            [class.cd-top]="tooltipDirection == 'top'"
+            [class.cd-bottom]="tooltipDirection == 'bottom'"
+            [class.cd-right]="tooltipDirection == 'right'">
+        <div class="add-pin-form form-group clearfix">
+            <div class="pin-block">
+                <a><i class="icn icn-add_pin"></i></a>
+                <span>Pin <strong>details:</strong></span>
+            </div>
+            <input type="text" class="col-sm-12 product" placeholder="Product name" [(ngModel)]="pin.product" (change)="productChanged()"/>
+            <div class="validation-error-msg add-pin-form-valid" *ngIf="!isProductValid">Product is empty or name is too long, max. 30 character allowed!</div>
+            <input type="text" class="col-sm-12 store" placeholder="Store name" [(ngModel)]="pin.store" (change)="storeChanged()"/>
+            <div class="validation-error-msg add-pin-form-valid" *ngIf="!isStoreValid">Store name is too long, max. 25 character allowed!</div>
+            <input type="text" class="col-sm-12 tags" placeholder="#Tags" [(ngModel)]="pin.tags" (change)="tagsChanged()"/>
+            <div class="validation-error-msg add-pin-form-valid" *ngIf="!isTagsValid">Too many tags or too long tags, max. 10 tags or 45 characters limitation per tag allowed!</div>
+            <input type="text" class="col-sm-12 link" placeholder="Link" [(ngModel)]="pin.link" (change)="linkChanged()"/>
+            <div class="validation-error-msg add-pin-form-valid" *ngIf="!isLinkValid">Not valid url!</div>
+            <button *ngIf="!pin.isSaved" class="cd-close-info-button btn btn-xs btn-inline btn-gray not-close-pin-mode">Discard</button>
+            <button *ngIf="!pin.isSaved" class="btn btn-xs btn-inline btn-blue pull-right not-close-pin-mode" [disabled]="isPinValid()">Pin it</button>
+            <button *ngIf="pin.isSaved" class="cd-close-info-button btn btn-xs btn-inline btn-gray not-close-pin-mode">Cancel</button>
+            <button *ngIf="pin.isSaved" class="cd-close-info-button btn btn-xs btn-inline btn-gray remove-saved-pin not-close-pin-mode">Delete</button>
+            <button *ngIf="pin.isSaved" class="btn btn-xs btn-inline btn-blue pull-right not-close-pin-mode" [disabled]="isPinValid()">Update</button>
+        </div>
+    </div>
+</li>

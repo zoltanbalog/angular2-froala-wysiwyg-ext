@@ -1,3 +1,14 @@
-<div class="pinnable-image-container">
-    <img src="{{imageSrc}}" data-id="{{imageUniqueId}}">
+<div class="row pinnable-image-row" style="display: inline-block">
+    <div class="pinnable-image-container image-content-container">
+        <div class="pin-container cd-product cd-container">
+            <div class="pin-list cd-product-wrapper">
+                <img src="{{imageSrc}}" data-id="{{imageUniqueId}}" class="post-image" (click)="insertNewPinToImage($event)">
+                <ul id="{{imageUniqueId}}-Ul" class="pin-point-list">
+                    <template ngFor [ngForOf]="pins" let-pin="$implicit" let-i="index">
+                        <froala-bf-pin [pin]="pin" [togglePin]="lastOpenedPin && pin.uniqueId == lastOpenedPin.uniqueId"></froala-bf-pin>
+                    </template>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

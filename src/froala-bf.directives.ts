@@ -92,6 +92,10 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     private createFroalaCustomButtons() {
         let self = this;
 
+        this.froalaEditorBf.DefineIconTemplate('icn_design', '<i class="icn icn-[NAME]"></i>');
+
+        this.froalaEditorBf.DefineIcon('imageAlt', {NAME: 'attributes', template: 'icn_design'});
+
         this.froalaEditorBf.DefineIcon('addPostImage', {NAME: 'image'});
         this.froalaEditorBf.RegisterCommand('addPostImage', {
             title: 'Add image from gallery',
@@ -130,7 +134,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             }
         });
 
-        this.froalaEditorBf.DefineIcon('preferPostImage', {NAME: 'bookmark'});
+        this.froalaEditorBf.DefineIcon('preferPostImage', {NAME: 'prefer', template: 'icn_design'});
         this.froalaEditorBf.RegisterCommand('preferPostImage', {
             title: 'Prefer image',
             focus: false,

@@ -47,6 +47,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
     @Input() thumbImageUrlPrefix;
     @Input() thumbImageUrlSuffix;
+    @Input() isInitRun: boolean = false;
 
     @Output() startAddPictureEvent = new EventEmitter<any>();
     @Output() startAddPinEvent = new EventEmitter<any>();
@@ -323,7 +324,11 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         });
 
         this.froalaElementBf.on('froalaEditor.contentChanged', function (e, editor) {
-            self.contentValidationChanged();
+            if (self.isInitRun) {
+                self.isInitRun = false;
+            } else {
+                self.contentValidationChanged();
+            }
         });
 
         this.froalaElementBf.on('froalaEditor.keypress', function (e, editor, keypressEvent) {

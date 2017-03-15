@@ -322,6 +322,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
                     self.feturedIdChanged();
                 }
                 newImageElements[i].classList.add('fr-fi-ftp');
+                newImageElements[i].classList.add('post-image');
                 clipboard_html = clipboard_html.replace(oldImageElements[i].outerHTML, newImageElements[i].outerHTML);
             }
             return clipboard_html;

@@ -1,27 +1,30 @@
 import { NgModule }                from "@angular/core";
 import { CommonModule }            from "@angular/common";
-import { FormsModule }             from "@angular/forms";
+import {ReactiveFormsModule}             from "@angular/forms";
 
 import { FroalaEditorModule }      from "angular2-froala-wysiwyg";
 
-import { FroalaBfDirectives }      from "./src/froala-bf.directives";
-import { FroalaBfAddPinComponent } from "./src/froala-bf-add-pin.component";
-import { FroalaBfPinComponent }    from "./src/froala-bf-pin.component";
+import { FroalaBfDirectives }      from "./src/directives/froala-bf.directives";
+import { ActionComponent } from "./src/components/pin/action.component";
+import { TooltipComponent }    from "./src/components/pin/tooltip.component";
+import { IconComponent }    from "./src/components/pin/icon.component";
+
 
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule,
+        ReactiveFormsModule,
         FroalaEditorModule.forRoot()
     ],
     declarations: [
         FroalaBfDirectives,
-        FroalaBfAddPinComponent,
-        FroalaBfPinComponent
+        ActionComponent,
+        TooltipComponent,
+        IconComponent
     ],
     exports: [
         FroalaBfDirectives,
-        FroalaBfAddPinComponent
+        ActionComponent
     ]
 })
 export class FroalaBfModule {}

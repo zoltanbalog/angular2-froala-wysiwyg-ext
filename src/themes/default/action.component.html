@@ -5,8 +5,9 @@
                 <img src="{{imageSrc}}" data-id="{{imageUniqueId}}" class="post-image" (click)="insertNewPinToImage($event)">
                 <ul id="{{imageUniqueId}}-Ul" class="pin-point-list">
                     <template ngFor [ngForOf]="pins" let-pin="$implicit" let-i="index">
-                        <froala-bf-pin [pin]="pin" [togglePin]="lastOpenedPin && pin.uniqueId == lastOpenedPin.uniqueId"></froala-bf-pin>
+                        <froala-bf-pin-icon [pin]="pin" (sendPin)="action($event)"></froala-bf-pin-icon>
                     </template>
+                    <froala-bf-pin *ngIf="lastOpenedPin" [pin]="lastOpenedPin" [isNew]="lastPinIsNew" (sendPin)="action($event)"></froala-bf-pin>
                 </ul>
             </div>
         </div>

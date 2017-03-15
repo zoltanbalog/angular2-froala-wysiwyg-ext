@@ -253,9 +253,9 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             },
         });
 
-        this.froalaEditorBf.DefineIcon('addPinToImage', {NAME: 'map-pin'});
+        this.froalaEditorBf.DefineIcon('addPinToImage', {NAME: 'add_pin', template: 'icn_design'});
         this.froalaEditorBf.RegisterCommand('addPinToImage', {
-            title: 'Add pin to image',
+            title: 'Add hanger to image',
             focus: false,
             undo: false,
             refreshAfterCallback: false,
@@ -343,23 +343,6 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             self.contentValidationChanged(true);
         });
 
-        this.froalaElementBf.on('froalaEditor.image.removed', function (e, editor, $img, response) {
-            let isFeatured = $img.hasClass('featured-image') || $img.attr('data-id') == self.featuredImage? true : false;
-            if (!isFeatured) {
-                return;
-            }
-
-            let newFeatured = document.querySelector('.post-image');
-            if (newFeatured) {
-                newFeatured.classList.add('featured-image');
-                self.featuredImage = newFeatured.getAttribute("data-id");
-                self.feturedIdChanged();
-            } else {
-                self.featuredImage = 3;
-                self.feturedIdChanged();
-            }
-            self.contentValidationChanged();
-        });
     }
 
     private setFroalaExternalEventListeners() {

@@ -15,7 +15,9 @@
   "bugs": {
     "url": "https://github.com/zoltanbalog/angular2-froala-wysiwyg-ext/issues"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@angular/core": "*",
+    "@angular/forms": "*",
     "angular2-froala-wysiwyg": "^2.5.0-1",
     "ts-md5": "^1.2.0"
   },

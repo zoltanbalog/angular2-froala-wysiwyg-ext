@@ -344,6 +344,28 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             self.contentValidationChanged(true);
         });
 
+
+        this.froalaElementBf.on('froalaEditor.image.removed', function (e, editor, $img, response) {
+            let isFeatured = $img.hasClass('featured-image') || $img.attr('data-id') == self.featuredImage? true : false;
+            if (!isFeatured) {
+                return;
+            }
+
+            let newFeatured = document.querySelector('.post-image');
+            if (newFeatured) {
+                newFeatured.classList.add('featured-image');
+                self.featuredImage = newFeatured.getAttribute("data-id");
+                self.feturedIdChanged();
+            } else {
+                self.featuredImage = 3;
+                self.feturedIdChanged();
+            }
+            self.contentValidationChanged();
+        });
+
+        this.froalaElementBf.on('froalaEditor.blur', function (e, editor) {
+            self.contentValidationChanged();
+        });
     }
 
     private setFroalaExternalEventListeners() {

@@ -115,7 +115,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             refreshAfterCallback: false,
             callback: function () {
                 let $img = this.image.get();
-                let isFeatured = $img.hasClass('featured-image') || $img.attr('data-id') == self.featuredImage? true : false;
+                let isFeatured = $img.hasClass('featured-image');// || $img.attr('data-id') == self.featuredImage? true : false;
                 this.image.remove($img);
                 if (!isFeatured) {
                     return;
@@ -142,7 +142,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             refreshAfterCallback: true,
             callback: function () {
                 let $img = this.image.get();
-                if ($img.hasClass('featured-image') && $img.attr('data-id') == self.featuredImage) {
+                if ($img.hasClass('featured-image')) { // && $img.attr('data-id') == self.featuredImage) {
                     return;
                 }
 
@@ -155,7 +155,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             },
             refresh: function ($btn) {
                 let $img = this.image.get();
-                if ($img.hasClass('featured-image') && $img.attr('data-id') == self.featuredImage) {
+                if ($img.hasClass('featured-image')) { // && $img.attr('data-id') == self.featuredImage) {
                     $btn.css('background', '#D6D6D6');
                 } else {
                     $btn.css('background', 'initial');

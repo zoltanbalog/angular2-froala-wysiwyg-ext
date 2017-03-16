@@ -19,6 +19,9 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     set featuredImageInitId(id) {
         if (id) {
             this.featuredImage = id;
+            if (id == this.imageDefaultId) {
+                this.findFeaturedImage();
+            }
         }
     }
 
@@ -58,6 +61,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     private froalaEditorBf: any;
     private froalaElementBf: any;
 
+    private imageDefaultId = 3;
     private featuredImage: any = 3;
     private imagesWaitingToInsert = [];
     private lastInsertedImgIndex = 0;
@@ -127,7 +131,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
                     self.featuredImage = newFeatured.getAttribute("data-id");
                     self.feturedIdChanged();
                 } else {
-                    self.featuredImage = 3;
+                    self.featuredImage = self.imageDefaultId;
                     self.feturedIdChanged();
                 }
                 self.contentValidationChanged();
@@ -287,7 +291,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         this.froalaElementBf.on('froalaEditor.image.inserted', function(e, editor, $img, response) {
             if (!self.isImageEdit) {
                 $img.addClass('post-image');
-                if (self.featuredImage == 3) {
+                if (self.featuredImage == self.imageDefaultId) {
                     self.featuredImage = $img.attr('data-id');
                     $img.addClass('featured-image');
                     self.feturedIdChanged();
@@ -316,7 +320,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             let oldImageElements = elem.getElementsByTagName('img');
             let newImageElements = self.changeImageSrc(oldImageElements);
             for (let i = 0; i < oldImageElements.length; i++) {
-                if (self.featuredImage == 3) {
+                if (self.featuredImage == self.imageDefaultId) {
                     self.featuredImage = newImageElements[i].getAttribute('data-id');
                     newImageElements[i].classList.add('featured-image');
                     self.feturedIdChanged();
@@ -346,7 +350,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
 
         this.froalaElementBf.on('froalaEditor.image.removed', function (e, editor, $img, response) {
-            let isFeatured = $img.hasClass('featured-image') || $img.attr('data-id') == self.featuredImage? true : false;
+            let isFeatured = $img.hasClass('featured-image'); // || $img.attr('data-id') == self.featuredImage? true : false;
             if (!isFeatured) {
                 return;
             }
@@ -357,7 +361,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
                 self.featuredImage = newFeatured.getAttribute("data-id");
                 self.feturedIdChanged();
             } else {
-                self.featuredImage = 3;
+                self.featuredImage = self.imageDefaultId;
                 self.feturedIdChanged();
             }
             self.contentValidationChanged();
@@ -467,5 +471,20 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         let $img = $('img[data-unique-id="'+ this.editedImageUniqueId +'"]');
         $img.removeAttr('contenteditable');
         this.finishLoader();
+    }
+
+    private findFeaturedImage() {
+        let featured = document.querySelector('.post-image');
+        let newFeatured = document.querySelector('.post-image');
+        if (featured) {
+            this.featuredImage = newFeatured.getAttribute("data-id");
+            this.feturedIdChanged();
+        } else if (newFeatured) {
+            newFeatured.classList.add('featured-image');
+            this.featuredImage = newFeatured.getAttribute("data-id");
+            this.feturedIdChanged();
+        } else {
+            this.featuredImage = this.imageDefaultId;
+        }
     }
 }

@@ -474,7 +474,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     }
 
     private findFeaturedImage() {
-        let featured = document.querySelector('.post-image');
+        let featured = document.querySelector('.featured-image');
         let newFeatured = document.querySelector('.post-image');
         if (featured) {
             this.featuredImage = newFeatured.getAttribute("data-id");

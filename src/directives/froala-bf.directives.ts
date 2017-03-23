@@ -98,6 +98,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
         this.froalaEditorBf.DefineIconTemplate('icn_design', '<i class="icn icn-[NAME]"></i>');
 
+        this.froalaEditorBf.DefineIcon('paragraphFormat', {NAME: 'paragraph', template: 'icn_design'});
         this.froalaEditorBf.DefineIcon('imageAlt', {NAME: 'attributes', template: 'icn_design'});
 
         this.froalaEditorBf.DefineIcon('addPostImage', {NAME: 'image'});

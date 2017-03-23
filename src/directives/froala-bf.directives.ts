@@ -265,7 +265,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             refreshAfterCallback: false,
             callback: function () {
                 let $img = this.image.get();
-                self.startAddPinEvent.emit({'uniqueId': $img.attr('data-unique-id'), 'src': $img.attr('src')});
+                self.startAddPinEvent.emit({'uniqueId': $img.attr('data-unique-id'), 'src': $img.attr('src'), 'img': $img});
             }
         });
 

@@ -48,6 +48,13 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         }
     }
 
+    @Input()
+    set toggleHangers(data) {
+        if (data && data['uniqueId']) {
+            this.addHangersToImage(data);
+        }
+    }
+
     @Input() thumbImageUrlPrefix;
     @Input() thumbImageUrlSuffix;
     @Input() isInitRun: boolean = false;
@@ -487,5 +494,17 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         } else {
             this.featuredImage = this.imageDefaultId;
         }
+    }
+
+    private addHangersToImage(data) {
+        let $img = $('img[data-unique-id="'+ data['uniqueId'] +'"]');
+        if (data['action'] == 'add') {
+            $img.addClass('has-hangers');
+            $img.parent().addClass('hanger');
+        } else if (data['action'] == 'remove') {
+            $img.removeClass('has-hangers');
+            $img.parent().removeClass('hanger');
+        }
+        this.froalaElementBf.froalaEditor('events.trigger', 'contentChanged', [], true);
     }
 }

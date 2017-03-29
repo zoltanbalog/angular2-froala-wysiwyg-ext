@@ -49,9 +49,16 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     }
 
     @Input()
-    set toggleHangers(data) {
-        if (data && data['uniqueId']) {
-            this.addHangersToImage(data);
+    set addHangerClassToImage(id) {
+        if (id) {
+            this.addHangerClassById(id);
+        }
+    }
+
+    @Input()
+    set removeHangerClassFromImage(id) {
+        if (id) {
+            this.removeHangerClassById(id);
         }
     }
 
@@ -506,5 +513,24 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
             $img.parent().removeClass('hanger');
         }
         this.froalaElementBf.froalaEditor('events.trigger', 'contentChanged', [], true);
+    }
+
+
+    private addHangerClassById(id) {
+        let $img = $('img[data-unique-id="'+ id +'"]');
+        $img.addClass('has-hangers');
+        $img.parent().addClass('hanger');
+        setTimeout(() => {
+            this.froalaElementBf.froalaEditor('events.trigger', 'contentChanged', [], true);
+        }, 0);
+    }
+
+    private removeHangerClassById(id) {
+        let $img = $('img[data-unique-id="'+ id +'"]');
+        $img.removeClass('has-hangers');
+        $img.parent().removeClass('hanger');
+        setTimeout(() => {
+            this.froalaElementBf.froalaEditor('events.trigger', 'contentChanged', [], true);
+        }, 0);
     }
 }

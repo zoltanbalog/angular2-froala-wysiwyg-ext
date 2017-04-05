@@ -11,7 +11,8 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   @Input()
   set insertImages(images) {
     if (images) {
-      this.addImagesToEditor(images);
+      this.imagesWaitingToInsert = images;
+      this.addImagesToEditor();
     }
   }
 
@@ -78,7 +79,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   private imageDefaultId = 3;
   private featuredImage: any = 3;
   private imagesWaitingToInsert = [];
-  private lastInsertedImgIndex = 0;
+  private actualInsertableImgIndex = 0;
   private imageCount = 0;
 
   private globalClickListener: any;
@@ -319,19 +320,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
           self.feturedIdChanged();
         }
         $img.addClass('fr-fi-ftp');
-        if (self.imagesWaitingToInsert[self.lastInsertedImgIndex + 1]) {
-          self.froalaElementBf.froalaEditor(
-            'image.insert',
-            self.imagesWaitingToInsert[self.lastInsertedImgIndex + 1].src,
-            true,
-            {
-              'id': self.imagesWaitingToInsert[self.lastInsertedImgIndex + 1].id,
-              'unique-id': self.imagesWaitingToInsert[self.lastInsertedImgIndex + 1].id + '-' + self.imageCount
-            }
-          );
-          self.imageCount++;
-          self.lastInsertedImgIndex = self.lastInsertedImgIndex + 1;
-        }
+        self.addImagesToEditor();
       }
       self.isImageEdit = false;
       self.contentValidationChanged(true);
@@ -427,18 +416,20 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     }
   }
 
-  private addImagesToEditor(response) {
-    this.imagesWaitingToInsert = response;
-    this.froalaElementBf.froalaEditor(
-      'image.insert',
-      response[0].src,
-      true,
-      {
-        'id': response[0].id,
-        'unique-id': response[0].id + '-' + this.imageCount
-      }
-    );
-    this.imageCount++;
+  private addImagesToEditor() {
+    if (this.imagesWaitingToInsert[this.actualInsertableImgIndex]) {
+      this.froalaElementBf.froalaEditor(
+        'image.insert',
+        this.imagesWaitingToInsert[this.actualInsertableImgIndex].src,
+        true,
+        {
+          'id': this.imagesWaitingToInsert[this.actualInsertableImgIndex].id,
+          'unique-id': this.imagesWaitingToInsert[this.actualInsertableImgIndex].id + '-' + this.imageCount
+        }
+      );
+      this.imageCount++;
+      this.actualInsertableImgIndex = this.actualInsertableImgIndex + 1;
+    }
   }
 
   private feturedIdChanged() {

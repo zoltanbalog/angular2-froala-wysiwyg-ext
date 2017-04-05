@@ -11,8 +11,6 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   @Input()
   set insertImages(images) {
     if (images) {
-      // this.imagesWaitingToInsert = images;
-      // this.actualInsertableImgIndex = 0;
       images.forEach(image => {
         this.addImagesToEditor(image);
       });
@@ -81,8 +79,6 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
 
   private imageDefaultId = 3;
   private featuredImage: any = 3;
-  private imagesWaitingToInsert = [];
-  private actualInsertableImgIndex = 0;
   private imageCount = 0;
 
   private globalClickListener: any;
@@ -324,7 +320,6 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         }
         $img.addClass('fr-fi-ftp');
         self.froalaElementBf.froalaEditor('selection.setAfter', $img);
-        // self.addImagesToEditor();
       }
       self.isImageEdit = false;
       self.contentValidationChanged(true);
@@ -434,22 +429,6 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
       this.imageCount++;
     }
   }
-
-  // private addImagesToEditor() {
-  //   if (this.imagesWaitingToInsert[this.actualInsertableImgIndex]) {
-  //     this.froalaElementBf.froalaEditor(
-  //       'image.insert',
-  //       this.imagesWaitingToInsert[this.actualInsertableImgIndex].src,
-  //       true,
-  //       {
-  //         'id': this.imagesWaitingToInsert[this.actualInsertableImgIndex].id,
-  //         'unique-id': this.imagesWaitingToInsert[this.actualInsertableImgIndex].id + '-' + this.imageCount
-  //       }
-  //     );
-  //     this.imageCount++;
-  //     this.actualInsertableImgIndex = this.actualInsertableImgIndex + 1;
-  //   }
-  // }
 
   private feturedIdChanged() {
     this.featuredImageChangedEvent.emit(this.featuredImage);

@@ -12,6 +12,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   set insertImages(images) {
     if (images) {
       this.imagesWaitingToInsert = images;
+      this.actualInsertableImgIndex = 0;
       this.addImagesToEditor();
     }
   }
@@ -320,6 +321,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
           self.feturedIdChanged();
         }
         $img.addClass('fr-fi-ftp');
+        self.froalaElementBf.froalaEditor('selection.setAfter', $img);
         self.addImagesToEditor();
       }
       self.isImageEdit = false;

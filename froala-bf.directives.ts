@@ -11,9 +11,11 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   @Input()
   set insertImages(images) {
     if (images) {
-      this.imagesWaitingToInsert = images;
-      this.actualInsertableImgIndex = 0;
-      this.addImagesToEditor();
+      // this.imagesWaitingToInsert = images;
+      // this.actualInsertableImgIndex = 0;
+      images.forEach(image => {
+        this.addImagesToEditor(image);
+      });
     }
   }
 
@@ -322,7 +324,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         }
         $img.addClass('fr-fi-ftp');
         self.froalaElementBf.froalaEditor('selection.setAfter', $img);
-        self.addImagesToEditor();
+        // self.addImagesToEditor();
       }
       self.isImageEdit = false;
       self.contentValidationChanged(true);
@@ -418,21 +420,36 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     }
   }
 
-  private addImagesToEditor() {
-    if (this.imagesWaitingToInsert[this.actualInsertableImgIndex]) {
+  private addImagesToEditor(image) {
+    if (image) {
       this.froalaElementBf.froalaEditor(
         'image.insert',
-        this.imagesWaitingToInsert[this.actualInsertableImgIndex].src,
+        image.src,
         true,
         {
-          'id': this.imagesWaitingToInsert[this.actualInsertableImgIndex].id,
-          'unique-id': this.imagesWaitingToInsert[this.actualInsertableImgIndex].id + '-' + this.imageCount
+          'id': image.id,
+          'unique-id': image.id + '-' + this.imageCount
         }
       );
       this.imageCount++;
-      this.actualInsertableImgIndex = this.actualInsertableImgIndex + 1;
     }
   }
+
+  // private addImagesToEditor() {
+  //   if (this.imagesWaitingToInsert[this.actualInsertableImgIndex]) {
+  //     this.froalaElementBf.froalaEditor(
+  //       'image.insert',
+  //       this.imagesWaitingToInsert[this.actualInsertableImgIndex].src,
+  //       true,
+  //       {
+  //         'id': this.imagesWaitingToInsert[this.actualInsertableImgIndex].id,
+  //         'unique-id': this.imagesWaitingToInsert[this.actualInsertableImgIndex].id + '-' + this.imageCount
+  //       }
+  //     );
+  //     this.imageCount++;
+  //     this.actualInsertableImgIndex = this.actualInsertableImgIndex + 1;
+  //   }
+  // }
 
   private feturedIdChanged() {
     this.featuredImageChangedEvent.emit(this.featuredImage);

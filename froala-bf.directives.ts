@@ -11,8 +11,14 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   @Input()
   set insertImages(images) {
     if (images) {
+      let imageNumber = document.querySelectorAll('.post-image').length;
       images.forEach(image => {
-        this.addImagesToEditor(image);
+        if (imageNumber < this.maximumImageNumber) {
+          this.addImagesToEditor(image);
+          imageNumber++;
+        } else {
+          this.toManyImageInsertedEvent.emit();
+        }
       });
     }
   }
@@ -67,12 +73,14 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   @Input() thumbImageUrlPrefix;
   @Input() thumbImageUrlSuffix;
   @Input() isInitRun: boolean = false;
+  @Input() maximumImageNumber: number = 10;
 
   @Output() startAddPictureEvent = new EventEmitter<any>();
   @Output() startAddPinEvent = new EventEmitter<any>();
   @Output() featuredImageChangedEvent = new EventEmitter<any>();
   @Output() contentValidationChangedEvent = new EventEmitter<any>();
   @Output() startEditImageEvent = new EventEmitter<any>();
+  @Output() toManyImageInsertedEvent = new EventEmitter<any>();
 
   private froalaEditorBf: any;
   private froalaElementBf: any;
@@ -325,19 +333,26 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
       self.contentValidationChanged(true);
     });
     this.froalaElementBf.on('froalaEditor.paste.afterCleanup', function (e, editor, clipboard_html) {
+      let imageNumber = document.querySelectorAll('.post-image').length;
       let elem = document.createElement("div");
       elem.innerHTML = clipboard_html;
       let oldImageElements = elem.getElementsByTagName('img');
       let newImageElements = self.changeImageSrc(oldImageElements);
       for (let i = 0; i < oldImageElements.length; i++) {
-        if (self.featuredImage == self.imageDefaultId) {
-          self.featuredImage = newImageElements[i].getAttribute('data-id');
-          newImageElements[i].classList.add('featured-image');
-          self.feturedIdChanged();
+        if (imageNumber < self.maximumImageNumber) {
+          if (self.featuredImage == self.imageDefaultId) {
+            self.featuredImage = newImageElements[i].getAttribute('data-id');
+            newImageElements[i].classList.add('featured-image');
+            self.feturedIdChanged();
+          }
+          newImageElements[i].classList.add('fr-fi-ftp');
+          newImageElements[i].classList.add('post-image');
+          clipboard_html = clipboard_html.replace(oldImageElements[i].outerHTML, newImageElements[i].outerHTML);
+          imageNumber++;
+        } else {
+          clipboard_html = clipboard_html.replace(oldImageElements[i].outerHTML, '');
+          self.toManyImageInsertedEvent.emit();
         }
-        newImageElements[i].classList.add('fr-fi-ftp');
-        newImageElements[i].classList.add('post-image');
-        clipboard_html = clipboard_html.replace(oldImageElements[i].outerHTML, newImageElements[i].outerHTML);
       }
       return clipboard_html;
     });

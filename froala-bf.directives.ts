@@ -11,15 +11,23 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   @Input()
   set insertImages(images) {
     if (images) {
-      let imageNumber = document.querySelectorAll('.post-image').length;
-      images.forEach(image => {
-        if (imageNumber < this.maximumImageNumber) {
-          this.addImagesToEditor(image);
-          imageNumber++;
-        } else {
-          this.toManyImageInsertedEvent.emit();
-        }
-      });
+      // let imageNumber = document.querySelectorAll('.post-image').length;
+      // images.forEach(image => {
+      //   if (imageNumber < this.maximumImageNumber) {
+      //     this.addImagesToEditor(image);
+      //     imageNumber++;
+      //   } else {
+      //     this.toManyImageInsertedEvent.emit();
+      //   }
+      // });
+      this.images = images;
+      this.imageNumber = document.querySelectorAll('.post-image').length;
+      this.imageLoopCounter = 0;
+      if (this.imageNumber < this.maximumImageNumber) {
+        this.addImagesLoop();
+      } else {
+        this.toManyImageInsertedEvent.emit();
+      }
     }
   }
 
@@ -81,6 +89,10 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   @Output() contentValidationChangedEvent = new EventEmitter<any>();
   @Output() startEditImageEvent = new EventEmitter<any>();
   @Output() toManyImageInsertedEvent = new EventEmitter<any>();
+
+  private images;
+  private imageLoopCounter: number = 0;
+  private imageNumber;
 
   private froalaEditorBf: any;
   private froalaElementBf: any;
@@ -430,7 +442,22 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     }
   }
 
-  private addImagesToEditor(image) {
+  private addImagesLoop() {
+    if (this.imageLoopCounter < this.images.length
+      && this.imageNumber < this.maximumImageNumber
+    ) {
+      this.addImageToEditor(this.images[this.imageLoopCounter]);
+      this.imageNumber++;
+      this.imageLoopCounter++;
+      setTimeout(() => {
+        this.addImagesLoop();
+      }, 500);
+    } else if (this.imageNumber >= this.maximumImageNumber) {
+      this.toManyImageInsertedEvent.emit();
+    }
+  }
+
+  private addImageToEditor(image) {
     if (image) {
       this.froalaElementBf.froalaEditor(
         'image.insert',

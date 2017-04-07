@@ -6,6 +6,8 @@ import {
 import { FroalaEditorDirective } from "angular2-froala-wysiwyg";
 import { Md5 }                   from "ts-md5/dist/md5";
 
+import * as $ from 'jquery';
+
 export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit, OnDestroy {
 
   @Input()

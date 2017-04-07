@@ -330,7 +330,6 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
           self.feturedIdChanged();
         }
         $img.addClass('fr-fi-ftp');
-        self.froalaElementBf.froalaEditor('selection.setAfter', $img);
       }
       self.isImageEdit = false;
       self.contentValidationChanged(true);
@@ -404,6 +403,13 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
         $img.addClass('fr-fil');
       }
     });
+
+    this.froalaElementBf.on('froalaEditor.image.loaded', function (e, editor, $img) {
+      self.froalaElementBf.froalaEditor('selection.setAfter', $img);
+      setTimeout(() => {
+        self.addImagesLoop();
+      }, 500);
+    });
   }
 
   private setFroalaExternalEventListeners() {
@@ -440,9 +446,6 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
       this.addImageToEditor(this.images[this.imageLoopCounter]);
       this.imageNumber++;
       this.imageLoopCounter++;
-      setTimeout(() => {
-        this.addImagesLoop();
-      }, 500);
     } else if (this.imageLoopCounter < this.images.length) {
       this.toManyImageInsertedEvent.emit();
     }

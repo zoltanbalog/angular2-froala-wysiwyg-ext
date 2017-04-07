@@ -11,15 +11,6 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
   @Input()
   set insertImages(images) {
     if (images) {
-      // let imageNumber = document.querySelectorAll('.post-image').length;
-      // images.forEach(image => {
-      //   if (imageNumber < this.maximumImageNumber) {
-      //     this.addImagesToEditor(image);
-      //     imageNumber++;
-      //   } else {
-      //     this.toManyImageInsertedEvent.emit();
-      //   }
-      // });
       this.images = images;
       this.imageNumber = document.querySelectorAll('.post-image').length;
       this.imageLoopCounter = 0;
@@ -452,7 +443,7 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
       setTimeout(() => {
         this.addImagesLoop();
       }, 500);
-    } else if (this.imageNumber >= this.maximumImageNumber) {
+    } else if (this.imageLoopCounter < this.images.length) {
       this.toManyImageInsertedEvent.emit();
     }
   }

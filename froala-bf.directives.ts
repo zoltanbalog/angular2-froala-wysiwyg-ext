@@ -407,7 +407,9 @@ export class FroalaBfDirectives extends FroalaEditorDirective implements OnInit,
     });
 
     this.froalaElementBf.on('froalaEditor.image.loaded', function (e, editor, $img) {
-      self.froalaElementBf.froalaEditor('selection.setAfter', $img);
+      self.froalaElementBf.froalaEditor('html.insert', '<p></p>', true);
+      let $parent = $img.parent().get(0);
+      self.froalaElementBf.froalaEditor('selection.setAfter', $parent);
       setTimeout(() => {
         self.addImagesLoop();
       }, 500);
